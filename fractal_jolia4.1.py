@@ -1,9 +1,9 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QLabel, QLineEdit
 from PyQt5.QtWidgets import QGridLayout, QPushButton, QSpinBox, QSizePolicy
-from PyQt5.QtWidgets import QFileDialog, QComboBox
-from PyQt5.QtGui import QPainter, QColor, QPen
-from PyQt5.QtGui import QIcon, QCursor
+from PyQt5.QtWidgets import QFileDialog, QComboBox, QCheckBox
+#from PyQt5.QtGui import QPainter, QColor, QPen
+from PyQt5.QtGui import QCursor
 from PyQt5.QtCore import Qt
 
 import numpy as np
@@ -104,16 +104,20 @@ class Window(QMainWindow):
  ###
         Enter = QPushButton('Draw', self)
         Enter.clicked.connect(self.Enter)
-        grid.addWidget(Enter,5,0,1,-1)
+        grid.addWidget(Enter,5,0,1,2)
+
+        self.plot = QCheckBox(self)
+        self.plot.setCheckState(2);
+        grid.addWidget(self.plot,5,2,1,-1)
  ###       
         self.Width = QSpinBox(self)
-        self.Width.setRange(900,1400)
+        self.Width.setRange(900,2500)
         self.Width.setValue(900)
         self.Width.setSingleStep(10)
         grid.addWidget(self.Width,6,0,1,2)
         
         self.Height = QSpinBox(self)
-        self.Height.setRange(700,900)
+        self.Height.setRange(700,2300)
         self.Height.setValue(700)
         self.Height.setSingleStep(10)
         grid.addWidget(self.Height,7,0,1,2)
@@ -160,6 +164,8 @@ class Window(QMainWindow):
     def Enter(self):
         self.Mp = Mplot(self)
         self.Mp.move(0,0)
+        if self.plot.checkState():
+            self.Mp.show()
 
     def Resize(self):
         self.resize(self.Width.value(),self.Height.value())
@@ -242,14 +248,16 @@ F = lambda z:'''+ self.parent.func.text(),globals())
             A = np.array([[complex(i,e) for i in A1] for e in A2])
                 
             self.B = np.zeros([self.h,self.w])
+            #Mask = np.full((self.h,self.w),False)
               
             for i in range(self.deph):
                 A = F(A)
                 mask = (abs(A)>5)&(self.B==0)
+                #Mask[mask]=True
                 self.B[mask]=i
-                A[mask]=np.nan
-            mask = (self.B==0)
-            self.B[mask]=self.deph + 1
+                A[self.B!=0]=0
+                #A[Mask]=0
+            self.B[self.B==0]=self.deph + 1
                     
                 
                     
@@ -262,7 +270,7 @@ F = lambda z:'''+ self.parent.func.text(),globals())
         ax.yaxis.set_major_formatter(plt.NullFormatter())
         ax.imshow(self.B, cmap = self.colorMap)
         
-        self.show()
+        #self.show()
 
     def mousePressEvent(self,event):
         if self.parent.i:

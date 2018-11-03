@@ -171,7 +171,11 @@ class Window(QMainWindow):
         grid.addWidget(Save,12,0,1,-1)
 
 ###
+        Save_Ani = QPushButton('Save_Ani', self)
+        Save_Ani.clicked.connect(self.Save_Ani)
+        grid.addWidget(Save_Ani,15,0,1,-1)
 
+###
         self.show()
 
 
@@ -201,7 +205,14 @@ class Window(QMainWindow):
         self.Mp = Mplot(self, B = self.Mp.B)
         self.Mp.move(0,0)
         self.Mp.animate()
-
+        
+    def Save_Ani(self):
+        filename = QFileDialog.getSaveFileName(self,
+                                               directory = '/home/mister/Изображения/fractals/',
+                                               caption = 'save_animated_fractal')[0]
+        if filename!='':
+            self.Mp.Anima.save(filename)
+            
     def CMap_act(self):
         self.Mp = Mplot(self, B = self.Mp.B)
         self.Mp.move(0,0)

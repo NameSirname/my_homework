@@ -205,6 +205,8 @@ class Window(QMainWindow):
         self.Mp = Mplot(self, B = self.Mp.B)
         self.Mp.move(0,0)
         self.Mp.animate()
+        if self.plot.checkState():
+            self.Mp.show()
         
     def Save_Ani(self):
         filename = QFileDialog.getSaveFileName(self,
@@ -319,8 +321,8 @@ F = lambda z:'''+ self.parent.func.text(),globals())
             self.const += self.delta
         self.const = const
         self.Anima = ani.ArtistAnimation(self.fig, ims, interval = 500,
-                                         blit = True, repeat=False)#repeat_delay=1000)
-        self.show()
+                                         blit = True, repeat_delay=1000)
+        
 
     def mousePressEvent(self,event):
         if self.parent.i:

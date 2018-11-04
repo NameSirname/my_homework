@@ -219,7 +219,7 @@ class Window(QMainWindow):
         
     def Save_Ani(self):
         filename = QFileDialog.getSaveFileName(self,
-                                               directory = '/home/mister/Изображения/fractals/',
+                                               directory = '/home/mister/Изображения/animated_fractals/',
                                                caption = 'save_animated_fractal')[0]
         if filename!='':
             self.Mp.Anima.save(filename)

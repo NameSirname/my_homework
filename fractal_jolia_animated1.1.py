@@ -2,7 +2,6 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QLabel, QLineEdit
 from PyQt5.QtWidgets import QGridLayout, QPushButton, QSpinBox, QSizePolicy
 from PyQt5.QtWidgets import QFileDialog, QComboBox, QCheckBox
-#from PyQt5.QtGui import QPainter, QColor, QPen
 from PyQt5.QtGui import QCursor
 from PyQt5.QtCore import Qt
 
@@ -82,19 +81,17 @@ class Window(QMainWindow):
         
  ###
         self.CMap = QComboBox(self)
-##        A = ['hot','viridis','plasma','inferno',
-##             'flag','prism','nipy_spectral','RdYlBu',
-##             'BuPu','YlGnBu','ocean','gist_earth',
-##             'gist_ncar','gist_rainbow','jet',
-##             'hsv','cubehelix','rainbow',
-##             'Greens']
-##        self.CMap.addItems(A)        
-##        self.CMap.addItems(list(map(lambda x: x+'_r',A)))
+        A = sorted(['hot','viridis','plasma','inferno',
+             'flag','prism','nipy_spectral','RdYlBu',
+             'BuPu','YlGnBu','ocean','gist_earth',
+             'gist_ncar','jet','cubehelix','rainbow'])
+        self.CMap.addItems(A)        
+        self.CMap.addItems(list(map(lambda x: x+'_r',A)))
 
 
         self.CMap.addItems(my_cmaps.A)
                             
-        self.CMap.setCurrentText('hot')
+        self.CMap.setCurrentText('p2')
         grid.addWidget(self.CMap,4,0,1,2)
         self.CMap.activated.connect(self.CMap_act)
 
@@ -147,21 +144,8 @@ class Window(QMainWindow):
         self.d.l = QLabel('offset')
         self.d.l.setStyleSheet("color: rgba(255,255,255)")
         grid.addWidget(self.d.l,9,2,1,-1)
-###
-        Animate = QPushButton('Animate', self)
-        Animate.clicked.connect(self.Animate)
-        grid.addWidget(Animate,13,0,1,-1)
 
-        self.delta = QLineEdit('0+1j',self)
-        grid.addWidget(self.delta,14,0,1,1)
-        
-        self.fps = QLineEdit('2',self)
-        grid.addWidget(self.fps,14,2,1,1)
-###
-        
-        self.Mp = Mplot(self)
-        self.Mp.move(0,0)
-
+###        
         lg = QPushButton("Lupa'n'Pupa", self)
         lg.clicked.connect(self.lg)
         grid.addWidget(lg,11,0,1,-1)
@@ -171,17 +155,37 @@ class Window(QMainWindow):
         grid.addWidget(Save,12,0,1,-1)
 
 ###
+        Animate = QPushButton('Animate', self)
+        Animate.clicked.connect(self.Animate)
+        grid.addWidget(Animate,13,0,1,1)
+
+        self.speed = QLineEdit('500',self)
+        grid.addWidget(self.speed,13,2,1,1)
+
+        self.delta = QLineEdit('c+0-0.01j',self)
+        grid.addWidget(self.delta,14,0,1,1)
+        
+        self.fps = QLineEdit('2',self)
+        grid.addWidget(self.fps,14,2,1,1)
+###
         Save_Ani = QPushButton('Save_Ani', self)
         Save_Ani.clicked.connect(self.Save_Ani)
         grid.addWidget(Save_Ani,15,0,1,-1)
 
 ###
+        self.Mp = Mplot(self)
+        self.Mp.move(0,0)
+        self.state = 0
+        
         self.show()
 
 
     def Enter(self):
-        self.Mp = Mplot(self)
-        self.Mp.move(0,0)
+        self.Mp.close()
+        self.Mp = Mplot(self, ims = self.Mp.ims)
+        #self.Mp.move(0,0)
+        self.Mp.plot()
+        self.state = 1
         if self.plot.checkState():
             self.Mp.show()
 
@@ -190,9 +194,12 @@ class Window(QMainWindow):
         self.move(0,0)
         self.win.resize(200,self.size().height())
         self.win.move(self.size().width()-200,0)
-        
+
+        self.Mp.close()
         self.Mp = Mplot(self)
         self.Mp.move(0,0)
+        self.state = 0
+            
 
     def Save(self):
         filename = QFileDialog.getSaveFileName(self,
@@ -202,9 +209,11 @@ class Window(QMainWindow):
             self.Mp.fig.savefig(filename, format='png')
 
     def Animate(self):
-        self.Mp = Mplot(self, B = self.Mp.B)
-        self.Mp.move(0,0)
+        self.Mp.close()
+        self.Mp = Mplot(self, pic = self.Mp.pic)
+        #self.Mp.move(0,0)
         self.Mp.animate()
+        self.state = 2
         if self.plot.checkState():
             self.Mp.show()
         
@@ -216,8 +225,13 @@ class Window(QMainWindow):
             self.Mp.Anima.save(filename)
             
     def CMap_act(self):
-        self.Mp = Mplot(self, B = self.Mp.B)
+        self.Mp.close()
+        self.Mp = Mplot(self, pic = self.Mp.pic, ims = self.Mp.ims)
         self.Mp.move(0,0)
+        if self.state == 1:
+            self.Mp.plot()
+        elif self.state == 2:
+            self.Mp.animate()
         if self.plot.checkState():
             self.Mp.show()
 
@@ -237,11 +251,14 @@ class Window(QMainWindow):
 
         
 class Mplot(FCanvas):
-    def __init__(self, parent,B=[]):
+    def __init__(self, parent,pic=[],ims=[]):
         self.parent = parent
         self.deph = parent.deph.value()
         self.w = parent.Width.value()-200
         self.h = parent.Height.value()
+
+        self.pic = pic
+        self.ims = ims
 
         self.a = float(parent.a.text())
         self.c = float(parent.c.text())
@@ -249,10 +266,9 @@ class Mplot(FCanvas):
         self.d = round(-float((self.c-self.a)/2*self.h/self.w)+float(parent.d.text()),6)
 
         self.fps = int(parent.fps.text())
-        self.delta  = complex(parent.delta.text())
+        self.speed = int(parent.speed.text())
         
         self.D = [self.a,self.b]
-        self.B = B
         self.colorMap = parent.CMap.currentText()
 
 
@@ -269,60 +285,64 @@ class Mplot(FCanvas):
                               QSizePolicy.Expanding)
         FCanvas.updateGeometry(self)
 
-        self.plot()
-
-    def plot(self):
-        if len(self.B)==0:
-            self.B=self.bitmap()    
-                
+###                      
         self.fig.subplots_adjust(left=0,right=1.0,top=1.0,bottom=0)
         ax = self.fig.add_subplot(111)
         ax.axis('scaled')
         ax.axis([0,self.w,0,self.h])
         ax.xaxis.set_major_formatter(plt.NullFormatter())
         ax.yaxis.set_major_formatter(plt.NullFormatter())
-        ax.imshow(self.B, cmap = self.colorMap)
+
+
+    def plot(self):
+        if len(self.pic)==0:
+            self.pic=self.bitmap()    
+        ax = self.fig.gca()
+        ax.imshow(self.pic, cmap = self.colorMap)
+
+
+    def animate(self):
+        if len(self.ims)==0:
+            self.ims = self.ani_bitmap()
+            self.plot()
+        ax = self.fig.gca()
+        ims = [[ax.imshow(im, cmap = self.colorMap)] for im in self.ims]
+        self.Anima = ani.ArtistAnimation(self.fig, ims, interval = self.speed,
+                                         blit = True)
         
-        #self.show()
+        
     def bitmap(self):
-        global c
-        c = self.const
         exec('''global F
-F = lambda z:'''+ self.parent.func.text(),globals())
-##            globals()['c']=c
+c = {0}
+F = lambda z: {1}'''.format(self.const, self.parent.func.text()),globals())
         
         A1 = np.linspace(self.a,self.c, self.w)
         A2 = np.linspace(self.d,self.b, self.h)
-
         A = np.array([[complex(i,e) for i in A1] for e in A2])
-            
         B = np.zeros([self.h,self.w])
-        #Mask = np.full((self.h,self.w),False)
           
         for i in range(self.deph):
             A = F(A)
             mask = (abs(A)>5)&(B==0)
-            #Mask[mask]=True
             B[mask]=i
             A[B!=0]=0
-            #A[Mask]=0
         B[B==0]=self.deph + 1
 
         return B
 
-
-    def animate(self):
+    def ani_bitmap(self):
+        exec('''global G
+G = lambda c: {0}'''.format(self.parent.delta.text()),globals())
         ims=[]
-        const = self.const
+        c = self.const
         for i in range(self.fps):
-            ax = self.fig.gca()
-            im = ax.imshow(self.bitmap(), cmap = self.colorMap)
-            ims.append([im])
-            self.const += self.delta
-        self.const = const
-        self.Anima = ani.ArtistAnimation(self.fig, ims, interval = 500,
-                                         blit = True, repeat_delay=1000)
+            im = self.bitmap()
+            ims.append(im)
+            self.const = G(self.const)
+        self.const = c
         
+        return ims
+
 
     def mousePressEvent(self,event):
         if self.parent.i:

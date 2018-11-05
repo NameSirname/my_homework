@@ -203,8 +203,8 @@ class Window(QMainWindow):
 
     def Save(self):
         filename = QFileDialog.getSaveFileName(self,
-                                               directory = '/home/mister/Изображения/fractals/',
-                                               caption = 'save_fractal')[0]
+                            directory = '/home/mister/Изображения/fractals/',
+                            caption = 'save_fractal')[0]
         if filename!='':
             self.Mp.fig.savefig(filename, format='png')
 
@@ -219,8 +219,8 @@ class Window(QMainWindow):
         
     def Save_Ani(self):
         filename = QFileDialog.getSaveFileName(self,
-                                               directory = '/home/mister/Изображения/animated_fractals/',
-                                               caption = 'save_animated_fractal')[0]
+                            directory = '/home/mister/Изображения/animated_fractals/',
+                            caption = 'save_animated_fractal')[0]
         if filename!='':
             self.Mp.Anima.save(filename)
             
@@ -308,7 +308,7 @@ class Mplot(FCanvas):
         ax = self.fig.gca()
         ims = [[ax.imshow(im, cmap = self.colorMap)] for im in self.ims]
         self.Anima = ani.ArtistAnimation(self.fig, ims, interval = self.speed,
-                                         blit = True)
+                                         blit = True, repeat = False)
         
         
     def bitmap(self):

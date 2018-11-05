@@ -336,6 +336,7 @@ G = lambda c: {0}'''.format(self.parent.delta.text()),globals())
         ims=[]
         c = self.const
         for i in range(self.fps):
+            print(i,end='\t')
             im = self.bitmap()
             ims.append(im)
             self.const = G(self.const)

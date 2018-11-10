@@ -339,7 +339,6 @@ double complex F(double complex z,double complex c){
         
     def bitmap(self):
         INTP = C.POINTER(C.c_int)
-        INTPP = C.POINTER(INTP)
         B = (INTP*self.h)()
         for i in range(self.h):
             B[i] = (C.c_int*self.w)()

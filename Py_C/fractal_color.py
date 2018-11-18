@@ -85,10 +85,10 @@ class Window(QMainWindow):
         self.prev_F = 'z*z+c'
 
         self.G = QLineEdit(self)
-        self.G.setText('i+cabs(z)*(deph/10/i)')
+        self.G.setText('i+cabs(z)*(deph/10/(i+1))')
         grid.addWidget(self.G,4,0,1,-1)
 
-        self.prev_G = 'i+cabs(z)*(deph/10/i)'
+        self.prev_G = 'i+cabs(z)*(deph/10/(i+1))'
         
  ###
         self.CMap = QComboBox(self)
@@ -191,9 +191,9 @@ class Window(QMainWindow):
         f_file = open("fractal_color_f.h","w")
         f_file.write('''#include<complex.h>
 #include<math.h>
-double complex F(double complex,double complex);
+double _Complex F(double _Complex,double _Complex);
 
-double complex F(double complex z,double complex c){
+double _Complex F(double _Complex z,double _Complex c){
         return z*z+c;
 }''')
         f_file.close()
@@ -201,10 +201,10 @@ double complex F(double complex z,double complex c){
         g_file = open("fractal_color_g.h","w")
         g_file.write('''#include<complex.h>
 #include<math.h>
-double G(int ,int,double complex);
+double G(double ,double,double _Complex);
 
-double G(int i,int deph, double complex z){
-        return i+cabs(z)*(deph/10/i);
+double G(double i,double deph, double _Complex z){
+        return i+cabs(z)*(deph/10/(i+1));
 }''')
         g_file.close()
         
@@ -224,9 +224,9 @@ double G(int i,int deph, double complex z){
             f_file = open("fractal_color_f.h","w")
             f_file.write('''#include<complex.h>
 #include<math.h>
-double complex F(double complex,double complex);
+double _Complex F(double _Complex,double _Complex);
 
-double complex F(double complex z,double complex c){
+double _Complex F(double _Complex z,double _Complex c){
         return %s;
 }'''%(self.prev_F))
             f_file.close()
@@ -234,9 +234,9 @@ double complex F(double complex z,double complex c){
             g_file = open("fractal_color_g.h","w")
             g_file.write('''#include<complex.h>
 #include<math.h>
-double G(int ,int ,double complex);
+double G(double ,double ,double _Complex);
 
-double G(int i,int deph ,double complex z){
+double G(double i,double deph ,double _Complex z){
         return %s;
 }'''%(self.prev_G))
             g_file.close()
@@ -281,9 +281,9 @@ double G(int i,int deph ,double complex z){
             f_file = open("fractal_color_f.h","w")
             f_file.write('''#include<complex.h>
 #include<math.h>
-double complex F(double complex,double complex);
+double _Complex F(double _Complex,double _Complex);
 
-double complex F(double complex z,double complex c){
+double _Complex F(double _Complex z,double _Complex c){
         return %s;
 }'''%(self.prev_F))
             f_file.close()
@@ -291,9 +291,9 @@ double complex F(double complex z,double complex c){
             g_file = open("fractal_color_g.h","w")
             g_file.write('''#include<complex.h>
 #include<math.h>
-double G(int ,int ,double complex);
+double G(double ,double ,double _Complex);
 
-double G(int i,int deph ,double complex z){
+double G(double i,double deph ,double _Complex z){
         return %s;
 }'''%(self.prev_G))
             g_file.close()

@@ -55,9 +55,9 @@ int bitmap(int w, int h, int deph, double a11, double a12, double a21, double a2
 
 double calculate(_Complex z,int deph){
 	int k;
-	for (k=0;k<deph;k++){
-		if (cabs(z)>5) break;
+	for (k=1;k<=deph;k++){
 		z = F(z,c);
+		if (cabs(z)>5) break;
 	}
 	return G((double)k,(double)deph,z);
 }

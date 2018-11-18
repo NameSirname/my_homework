@@ -1,7 +1,7 @@
 #include<complex.h>
 #include<math.h>
-double G(int ,int ,double complex);
+double G(double ,double ,double _Complex);
 
-double G(int i,int deph ,double complex z){
+double G(double i,double deph ,double _Complex z){
         return i+cabs(z)*(deph/10/i+10);
 }

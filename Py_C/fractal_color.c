@@ -59,5 +59,5 @@ double calculate(_Complex z,int deph){
 		if (cabs(z)>5) break;
 		z = F(z,c);
 	}
-	return G(k,deph,z);
+	return G((double)k,(double)deph,z);
 }

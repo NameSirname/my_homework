@@ -26,7 +26,6 @@ int main(void){
 
 	bitmap(w,h,deph,a11,a12,a21,a22,Rec,Imc,B);
 
-
 	for(i=0;i<h;i++){
 		for(j=0;j<w;j++) fprintf(out,"%.10lf ",B[i][j]);
 		fprintf(out,"\n");
@@ -46,7 +45,7 @@ int bitmap(int w, int h, int deph, double a11, double a12, double a21, double a2
 
 #pragma omp parallel for schedule(dynamic)
 	for(i=0;i<h*w;i++){
-		B[i/h][i%w] = calculate((a11+(i%w)*delta1) + (a22+(i/h)*delta2) * I,deph);
+		B[i/w][i%w] = calculate((a11+(i%w)*delta1) + (a22+(i/w)*delta2) * I,deph);
 	}
 	return 0;
 

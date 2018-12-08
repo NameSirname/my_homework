@@ -45,7 +45,7 @@ int bitmap(int w, int h, int deph, double a11, double a12, double a21, double a2
 
 #pragma omp parallel for schedule(dynamic)
 	for(i=0;i<h*w;i++){
-		B[i/h][i%w] = calculate((a11+(i%w)*delta1) + (a22+(i/h)*delta2) * I,deph);
+		B[i/w][i%w] = calculate((a11+(i%w)*delta1) + (a22+(i/w)*delta2) * I,deph);
 	}
 	return 0;
 

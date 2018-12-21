@@ -4,9 +4,9 @@ from PyQt5.QtWidgets import QGridLayout, QFileDialog
 from PyQt5.QtGui import QCursor
 from PyQt5.QtCore import Qt
 
-from multifrac_make2 import new_F,new_G,new_H, comp_le
+from multifrac_make import new_F,new_G,new_H, comp_le
 from multifrac_widgets2 import *
-from multifrac_plot2 import PLOT
+from multifrac_plot import PLOT
 
 
 class Window(QMainWindow):

@@ -59,7 +59,7 @@ class Window(QMainWindow):
         LUPA(self,8)
         FUNCTIONS(self,9,
                   DefaultF = "z*z+c",
-                  DefaultG = "i+cabs(z)*deph/10/i",
+                  DefaultG = "i+cabs(z)*deph/10/(i+1)",
                   DefaultFractalTypes = self.TYPES.keys(),
                   DefaultH = "Julia")
         EDIT(self,300,200)

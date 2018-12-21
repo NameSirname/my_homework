@@ -4,9 +4,9 @@
 #include "multifrac_f.h"
 #include "multifrac_g.h"
 
-double H(_Complex, _Complex, int);
+double H(double _Complex, double _Complex, int);
 
-double H(_Complex z, _Complex c, int deph){
+double H(double _Complex z, double _Complex c, int deph){
         int k; _Complex w;
 	w=z; z = c;
 	for (k=1;k<=deph;k++){

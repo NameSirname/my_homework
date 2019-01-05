@@ -51,7 +51,6 @@ class PLOT(FCanvas):
         self.d = -float((self.c-self.a)/2*self.h/self.w)+self.offset
 
         self.frames = int(self.parent.frames.text())
-        self.speed = int(self.parent.speed.text())
         
         self.colorMap = self.parent.CMap.currentText()
         self.const = complex(self.parent.const.text())
@@ -65,35 +64,38 @@ class PLOT(FCanvas):
                                          self.d+(i//self.w)*delta) for i in range(self.w*self.h)])
             
             start = time.time()
-            self.pic = f_bitmap.bitmap(self.pic,self.const,self.deph).reshape([self.h,self.w])
+            self.pic = f_bitmap.bitmap(self.pic,
+                                       self.const,
+                                       self.deph).real.reshape([self.h,self.w])
             print("{0:.2f} sec".format(time.time()-start))
             
-        self.ax.imshow(self.pic.real, cmap = self.colorMap)
+        self.ax.imshow(self.pic, cmap = self.colorMap)
 
     def animate(self):
         if len(self.ims)==0:
-            self.ims = self.ani_bitmap()
             self.plot()
+            self.ani_bitmap()
+            self.pic = []
             
         ims = [[self.ax.imshow(im, cmap = self.colorMap)] for im in self.ims]
-        self.Anima = ani.ArtistAnimation(self.fig, ims, interval = self.speed,
+        self.Anima = ani.ArtistAnimation(self.fig, ims,
+                                         interval = int(self.parent.speed.text()),
                                          blit = True, repeat = False)
 
-
     def ani_bitmap(self):
-        ims=[]
+        exec('''global D
+D = lambda c: {0}'''.format(self.parent.delta.text()),globals())
         c = self.const
         delta = (self.c-self.a)/self.w
         for i in range(self.frames):
-            print(i,end='\t')
+            c = D(c)
             self.pic = np.array([complex(self.a+(i%self.w)*delta,
                                          self.d+(i//self.w)*delta) for i in range(self.w*self.h)])
-            self.pic = f_bitmap.bitmap(self.pic,self.const,self.deph).reshape([self.h,self.w])
-            ims.append(self.pic.real)
-            self.const = H(self.const)
-        self.const = c
+            start = time.time()
+            self.ims.append(f_bitmap.bitmap(self.pic, c, self.deph).real.reshape([self.h,self.w]))
+            print(i,"\t{0:.2f} sec".format(time.time()-start))
+        return None
         
-        return ims
 
     def mousePressEvent(self,event):
         if self.parent.zooming:

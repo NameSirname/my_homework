@@ -6,7 +6,6 @@ from multifrac_gpu_G import G
 def H(z,c,deph):
     for k in range(deph):
         z = F(z,c)
-        c = z+c/2
         if (abs(z)>5):
             break
     return G(z,k,deph)

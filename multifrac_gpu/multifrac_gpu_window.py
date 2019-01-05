@@ -79,12 +79,12 @@ class Window(QMainWindow):
         ZOOM(self,8)
         FUNCTIONS(self,9,
                   DefaultF = "z*z+c",
-                  DefaultG = "k+abs(z)*deph/10/(k+2)",
+                  DefaultG = "k+np.angle(z)*deph/10/(k+2)",
                   DefaultFractalTypes = self.TYPES.keys(),
                   DefaultH = "Julia")
         EDIT(self,300,200)
         COLORMAP(self,12, DefaultMap = 'p2',DefaultColorMaps = COLORS)
-        ANIMATE(self,13,3, DefaultSpeed = '250',DefaultDelta = 'c-0.01j')
+        ANIMATE(self,13,3, DefaultSpeed = '250',DefaultDelta = "c*1j**0.05")
         SAVE(self,15)
 
 #PLOT
@@ -98,6 +98,7 @@ class Window(QMainWindow):
         reload(f_F)
         reload(f_G)
         reload(f_H)
+        reload(f_bitmap)
         
         self.show()
 

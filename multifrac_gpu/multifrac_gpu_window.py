@@ -175,7 +175,7 @@ class Window(QMainWindow):
                             directory = '/home/mister/Изображения/animated_fractals/',
                             caption = 'save_animated_fractal')[0]
         if filename!='':
-            self.CANVAS.Anima.save(filename)
+            self.CANVAS.Anima.save(filename, bitrate=-1)
     
     def recompile(self):
         if self.g.checkState():

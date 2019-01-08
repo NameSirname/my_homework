@@ -18,13 +18,12 @@ import multifrac_gpu_bitmap as f_bitmap
 class PLOT(FCanvas):
     def __init__(self, parent):
         self.parent = parent
-        self.w = self.parent.Width.value()-self.parent.toolbar_width
-        self.h = self.parent.Height.value()
         
         self.pic = []
         self.ims = []
         
-        self.fig = Figure(figsize = (self.w/8,self.h/8),dpi=8)
+        self.fig = Figure(figsize = ((self.parent.Width.value()-self.parent.toolbar_width)/8,
+                                     (self.parent.Height.value())/8), dpi=8)
 
         FCanvas.__init__(self,self.fig)
         self.setParent(self.parent)
@@ -42,6 +41,10 @@ class PLOT(FCanvas):
         self.ax.yaxis.set_major_formatter(plt.NullFormatter())
 
     def Build(self):
+        self.w = self.parent.Width.value()-self.parent.toolbar_width
+        self.h = self.parent.Height.value()
+        self.fig.set_size_inches(self.w/8,self.h/8)
+        
         self.deph = self.parent.deph.value()
 
         self.offset = float(self.parent.offset.text())

@@ -18,13 +18,12 @@ import subprocess as sub
 class PLOT(FCanvas):
     def __init__(self, parent):
         self.parent = parent
-        self.w = self.parent.Width.value()-self.parent.toolbar_width
-        self.h = self.parent.Height.value()
         
         self.pic = []
         self.ims = []
         
-        self.fig = Figure(figsize = (self.w/8,self.h/8),dpi=8)
+        self.fig = Figure(figsize = ((self.parent.Width.value()-self.parent.toolbar_width)/8,
+                                     (self.parent.Height.value())/8), dpi=8)
 
         FCanvas.__init__(self,self.fig)
         self.setParent(self.parent)
@@ -42,6 +41,10 @@ class PLOT(FCanvas):
         self.ax.yaxis.set_major_formatter(plt.NullFormatter())
 
     def Build(self):
+        self.w = self.parent.Width.value()-self.parent.toolbar_width
+        self.h = self.parent.Height.value()
+        self.fig.set_size_inches(self.w/8,self.h/8)
+        
         self.deph = self.parent.deph.value()
 
         self.offset = float(self.parent.offset.text())
@@ -51,7 +54,6 @@ class PLOT(FCanvas):
         self.d = -float((self.c-self.a)/2*self.h/self.w)+self.offset
 
         self.frames = int(self.parent.frames.text())
-        self.speed = int(self.parent.speed.text())
         
         self.colorMap = self.parent.CMap.currentText()
         self.const = complex(self.parent.const.text())
@@ -60,7 +62,7 @@ class PLOT(FCanvas):
 
     def plot(self):
         if len(self.pic)==0:
-            self.pic=self.bitmap()
+            self.pic = self.bitmap()
             
         self.ax.imshow(self.pic, cmap = self.colorMap)
 
@@ -85,25 +87,27 @@ class PLOT(FCanvas):
 
     def animate(self):
         if len(self.ims)==0:
-            self.ims = self.ani_bitmap()
             self.plot()
+            self.ani_bitmap()
             
         ims = [[self.ax.imshow(im, cmap = self.colorMap)] for im in self.ims]
-        self.Anima = ani.ArtistAnimation(self.fig, ims, interval = self.speed,
+        self.Anima = ani.ArtistAnimation(self.fig, ims,
+                                         interval = int(self.parent.speed.text()),
                                          blit = True, repeat = False)
 
 
     def ani_bitmap(self):
-        ims=[]
+        exec('''global D
+D = lambda c: {0}'''.format(self.parent.delta.text()),globals())
         c = self.const
         for i in range(self.frames):
             print(i,end='\t')
             self.pic = self.bitmap()
-            ims.append(self.pic)
-            self.const = H(self.const)
+            self.ims.append(self.pic)
+            self.const = D(self.const)
         self.const = c
         
-        return ims
+        return None
 
     def mousePressEvent(self,event):
         if self.parent.zooming:

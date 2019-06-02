@@ -8,5 +8,5 @@
 
 2) в папке jerunda заготовка к переписыванию всего на C/C++ с qt, для запуска может требоваться шаманство с .pro файлом (и не забыть про строчку "QT += widgets core gui")
 для запуска: отредачить .pro файл, затем
- qmake -o Makefile frac.pro
- make
+(!)qmake -o Makefile frac.pro
+(!)make

@@ -22,12 +22,11 @@ QMAKE_LFLAGS += -fopenmp
 HEADERS += \
 	$${INCLUDE_DIR}/window.h \
 	$${INCLUDE_DIR}/picture.h \
-	$${INCLUDE_DIR}/F.h \
-	$${INCLUDE_DIR}/H.h
-
+	$${INCLUDE_DIR}/Iterate.h \
+	$${INCLUDE_DIR}/F.h
 SOURCES += \
 	$${SOURCE_DIR}/frac.cpp \
 	$${SOURCE_DIR}/window.cpp \
 	$${SOURCE_DIR}/picture.cpp \
-	$${SOURCE_DIR}/F.cpp \
-	src/H.cpp
+	$${SOURCE_DIR}/Iterate.cpp \
+	$${SOURCE_DIR}/F.cpp

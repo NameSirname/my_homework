@@ -37,7 +37,7 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = frac1.0.0
-DISTDIR = /home/mister_u/CProj/frac/obj/frac1.0.0
+DISTDIR = /home/mister_u/CProj/C++frac/obj/frac1.0.0
 LINK          = g++
 LFLAGS        = -fopenmp -Wl,-O1
 LIBS          = $(SUBLIBS) -lQt5Widgets -lQt5Gui -lQt5Core /usr/lib/x86_64-linux-gnu/libGL.so -lpthread  -fopenmp 
@@ -55,13 +55,13 @@ OBJECTS_DIR   = obj/
 SOURCES       = src/frac.cpp \
 		src/window.cpp \
 		src/picture.cpp \
-		src/F.cpp \
-		src/H.cpp moc/moc_window.cpp
+		src/Iterate.cpp \
+		src/F.cpp moc/moc_window.cpp
 OBJECTS       = obj/frac.o \
 		obj/window.o \
 		obj/picture.o \
+		obj/Iterate.o \
 		obj/F.o \
-		obj/H.o \
 		obj/moc_window.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
@@ -140,12 +140,12 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		frac.pro include/window.h \
 		include/picture.h \
-		include/F.h \
-		include/H.h src/frac.cpp \
+		include/Iterate.h \
+		include/F.h src/frac.cpp \
 		src/window.cpp \
 		src/picture.cpp \
-		src/F.cpp \
-		src/H.cpp
+		src/Iterate.cpp \
+		src/F.cpp
 QMAKE_TARGET  = frac
 DESTDIR       = 
 TARGET        = frac
@@ -331,8 +331,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents include/window.h include/picture.h include/F.h include/H.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/frac.cpp src/window.cpp src/picture.cpp src/F.cpp src/H.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents include/window.h include/picture.h include/Iterate.h include/F.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/frac.cpp src/window.cpp src/picture.cpp src/Iterate.cpp src/F.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -369,11 +369,11 @@ compiler_moc_header_clean:
 	-$(DEL_FILE) moc/moc_window.cpp
 moc/moc_window.cpp: include/window.h \
 		include/picture.h \
-		include/H.h \
+		include/Iterate.h \
 		include/F.h \
 		moc/moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/mister_u/CProj/frac/moc/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/mister_u/CProj/frac -I/home/mister_u/CProj/frac -I/home/mister_u/CProj/frac/include -I/home/mister_u/CProj/frac/src -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/8 -I/usr/include/x86_64-linux-gnu/c++/8 -I/usr/include/c++/8/backward -I/usr/lib/gcc/x86_64-linux-gnu/8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/window.h -o moc/moc_window.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/mister_u/CProj/C++frac/moc/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/mister_u/CProj/C++frac -I/home/mister_u/CProj/C++frac -I/home/mister_u/CProj/C++frac/include -I/home/mister_u/CProj/C++frac/src -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/8 -I/usr/include/x86_64-linux-gnu/c++/8 -I/usr/include/c++/8/backward -I/usr/lib/gcc/x86_64-linux-gnu/8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include include/window.h -o moc/moc_window.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -393,27 +393,27 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 
 obj/frac.o: src/frac.cpp include/window.h \
 		include/picture.h \
-		include/H.h \
+		include/Iterate.h \
 		include/F.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/frac.o src/frac.cpp
 
 obj/window.o: src/window.cpp include/window.h \
 		include/picture.h \
-		include/H.h \
+		include/Iterate.h \
 		include/F.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/window.o src/window.cpp
 
 obj/picture.o: src/picture.cpp include/picture.h \
-		include/H.h \
+		include/Iterate.h \
 		include/F.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/picture.o src/picture.cpp
 
+obj/Iterate.o: src/Iterate.cpp include/Iterate.h \
+		include/F.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/Iterate.o src/Iterate.cpp
+
 obj/F.o: src/F.cpp include/F.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/F.o src/F.cpp
-
-obj/H.o: src/H.cpp include/H.h \
-		include/F.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/H.o src/H.cpp
 
 obj/moc_window.o: moc/moc_window.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/moc_window.o moc/moc_window.cpp

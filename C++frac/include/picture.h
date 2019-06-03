@@ -1,7 +1,7 @@
 #pragma once
 #ifndef picture_h_
 #define picture_h_
-#include"H.h"
+#include"Iterate.h"
 #include<stdlib.h>
 #include<time.h>
 #include<omp.h>

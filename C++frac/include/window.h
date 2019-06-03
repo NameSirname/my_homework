@@ -23,7 +23,7 @@
 #include<Qt>
 #include<QApplication>
 #include<QMouseEvent> 
-//#include<QColor>
+#include<QColor>
 //#include<QPalette>
 
 #include<QCoreApplication>
@@ -63,7 +63,9 @@ class Window : public QMainWindow
 		void DRAW(int);
 		void ZOOM(int);
 		
-		void drawImage();
+		QVector<QRgb> palette;
+		QColor color(int);
+		void drawImage(bool redraw = 1);
 
 	public slots:
 		void Resize();

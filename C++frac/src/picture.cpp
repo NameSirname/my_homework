@@ -16,7 +16,7 @@ int build(struct Fractal * fractal)
 #pragma omp parallel for 
 	for(k=0; k<(fractal->height)*(fractal->width); k++){
 		//if(k%1000==0) printf("%d ",k/1000);
-		fractal->bitmap[k] = H((fractal->minX+(k%fractal->width)*delta),
+		fractal->bitmap[k] = Iterate((fractal->minX+(k%fractal->width)*delta),
 					(fractal->maxY-(k/fractal->width)*delta),
 					fractal->constRe, fractal->constIm, fractal->deph);
 	}

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#xdotool windowminimize 0x0$(xprop -root | grep '^_NET_ACTIVE_WINDOW' | awk -F'# 0x' '{print $2}')
+if [ $1 == 1 ]
+	then xdotool windowclose $(xdotool getactivewindow)
+	else xdotool getactivewindow windowminimize 
+	#else xdotool windowminimize $(xdotool getactivewindow)
+fi
+
+# just notifying file

@@ -1,0 +1,34 @@
+### <!!!>
+"WHAT, WHERE, WHEN"
+[[
+/etc/init.d -- скрипты, выполняемые при запуске
+
+/usr/bin/google-chrome-stable -- путь к браузеру (installed with [1] wget... [2] sudo dpkg)
+/var/lib/snapd/desktop/applications/chromium_chromium.desktop -- chromium, nlg
+
+startup applications -- утилита для добавления команд, исполняемых при запуске системы
+
+home/mister_u/gestures/cycle_windows -- скрипты для переключения окон; в этой же папке есть и другие, nlg
+]]
+
+### <!!!>
+"TOOLS"
+[[
+xdotool, wmctrl, xprop, (xev, xwininfo?)
+easystroke, gestures, 
+sed, (dbus ?)
+]]
+
+### <!!!>
+"NOTES, dummy"
+[[
+...<some prog>... 2>&1  -- перенаправить вывод программы ('>') из STDERR ('2') в STDOUT ('1') 
+('&' добавляется специально перед источнихом выхода, т.к. это '1')
+(также возможно 'output >/dev/null' (уже без '&'), nlg)
+
+sudo gpasswd -a $USER input -- добавить пользователя '$USER' в группу 'input'
+
+echo $XDG_SESSION_TYPE -- узнать формат сессии (x11 или wayland)
+
+sed -i 's/^[ \t]*//' ~/.bash_history -- убрать все табы и пробелы в начале каждой строки
+]]

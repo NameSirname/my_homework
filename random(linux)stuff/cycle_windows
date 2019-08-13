@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# get id of the focused window
+#active_win_id=0x0$(xprop -root | grep '^_NET_ACTIVE_WINDOW' | awk -F'# 0x' '{print $2}')
+active_win_id=$(wmctrl -a :ACTIVE: -v 2>&1 | grep "Using window: " | awk '{print $3}')
+
+if [ "$active_win_id" == "0" ]; then
+    active_win_id=""
+fi
+
+# get list of all windows
+win_list=$(wmctrl -xl | awk '{print $1}' )
+
+# get next/previous window to focus on, removing id active
+if [ "$1" == "1" ]
+	then switch_to=$(echo $win_list | sed s/.*$active_win_id// | awk '{print $1}')
+	else switch_to=$(echo $win_list | sed s/$active_win_id.*// | awk '{print $NF}')
+fi 
+
+# if the current window is the last in the list ... take the first/last one
+if [ "$switch_to" == '' ];then
+	if [ "$1" == "1" ]
+		then switch_to=$(echo $win_list | awk '{print $1}')
+		else switch_to=$(echo $win_list | awk '{print $NF}')
+	fi
+fi
+
+# switch to window
+wmctrl -ia $switch_to
+
+
+#script for changing windows in cycle for binding with Gestures(TM)  

@@ -53,7 +53,11 @@ def SIZE(self,pos, row, MinWidth = 700,MinHeight = 700,
 def METADATA(self,pos,row):
     x = 1
     self.oldMetadata = QTextEdit()
-    self.grid.addWidget(self.oldMetadata,pos,0,x,self.row)
+    self.grid.addWidget(self.oldMetadata,pos,0,x,self.row-1)
+
+    self.changeMeta  = QCheckBox(self)
+    self.changeMeta.setCheckState(2)
+    self.grid.addWidget(self.changeMeta,pos,self.row-1,1,1) 
     
     text = QTextEdit()
     self.grid.addWidget(text,pos + x,0,1,self.row - 1)

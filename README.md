@@ -1,5 +1,7 @@
 Хранилище всех моих программ, хоть сколько-нибудь стоящих хранения
 
+в основном фракталы (90% python using pyqt5, matplotlib, numpy, numba; есть попытка в C++ using Qt5). еще редактор метадаты аудиофайлов (using ffmpeg). еще какие-то sh скрипты для ворочания окон (for gestures + libinput-gestures). какие-то bash истории ещё. и куча мусора
+
 Напоминания для меня в будущем: 
 
 0) gcc -Wall -Wextra multifrac.c -lm -fopenmp -o a.o 

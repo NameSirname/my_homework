@@ -56,7 +56,11 @@ def METADATA(self,pos,row):
     self.grid.addWidget(self.oldMetadata,pos,0,x,self.row)
     
     text = QTextEdit()
-    self.grid.addWidget(text,pos + x,0,1,self.row)
+    self.grid.addWidget(text,pos + x,0,1,self.row - 1)
+
+    self.showMeta  = QCheckBox(self)
+    self.showMeta.setCheckState(0)
+    self.grid.addWidget(self.showMeta,pos + x,self.row-1,1,1) 
     
     self.grid.addWidget(QLabel("New Metadata"),pos + x+1,0,1,self.row)
     
@@ -102,6 +106,6 @@ def APPLY(self,pos,row):
     
     Play = QPushButton('Play', self)
     Play.clicked.connect(self.Play)
-    self.grid.addWidget(Play,pos+2,0,1,self.row)
+    self.grid.addWidget(Play,pos+2,0,1,self.row - 1) 
 
     return 3

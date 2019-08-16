@@ -108,9 +108,7 @@ class Window(QMainWindow):
 
     def Delete(self):
         if len(self.fileName)>0:
-            command = ['rm', self.filePath]
-            sp.run(command)#, shell=True, check=True)
-##            print(sp.run(command, shell=True, check=True, capture_output=True))
+            remove(self.filePath)
         return None
 
     def Cover(self):
@@ -123,9 +121,8 @@ class Window(QMainWindow):
     
     def Play(self):
         if self.meta:
-            command = ['vlc', self.filePath]
-            sp.run(command)#, shell=True, check=True)
-##            print(sp.run(command, shell=True, check=True, capture_output=True))
+            sp.run(['vlc', self.filePath])
+            #(shell=True, check=True, capture_output=True)
         return None
    
     @QtCore.pyqtSlot(QtCore.QModelIndex)
@@ -140,24 +137,31 @@ class Window(QMainWindow):
             self.title.setText(self.fileName)
             self.meta = True
 
-            command = ['rm', self.dir + '/metadata.txt']
-            sp.run(command)
-            command = ['ffmpeg', '-i', self.filePath, '-f',
-                       'ffmetadata', self.dir + '/metadata.txt']
-            sp.run(command)
+            if self.showMeta.checkState():
+                command = ['ffmpeg', '-i', self.filePath, '-f',
+                           'ffmetadata', self.dir + '/metadata.txt', '-y']
+                sp.run(command)
+                file = open(self.dir + '/metadata.txt', 'r')
+                self.oldMetadata.setText(file.read())
+                file.close()
+##            remove(self.dir + '/metadata.txt')
 ##            command = ('rm ' + '"' + self.dir + '/metadata.txt' + '" && ' +
 ##                'ffmpeg -i ' + '"' + self.filePath + '"' +
 ##                ' -f ffmetadata ' + '"' + self.dir + '/metadata.txt' + '"')
 ##            sp.run(command, shell=True, check=True)
 ##            print(sp.run(command, shell=True, check=True, capture_output=True))
-            file = open(self.dir + '/metadata.txt', 'r')
-            self.oldMetadata.setText(file.read())
-            file.close()
+            
         else:
             self.title.setText('')
             self.meta = False
             
         return None
+
+def remove(filePath):
+    sp.run(['rm', filePath])
+    #(shell=True, check=True)
+    #print(sp.run(command, shell=True, check=True, capture_output=True)
+    return None
 
         
 if __name__=='__main__':

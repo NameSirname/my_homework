@@ -90,7 +90,7 @@ class Window(QMainWindow):
             self.outPath = (self.filePath[: -len(self.fileName)]
                             + self.title.text().replace(' ', '_'))
             
-            command = 'ffmpeg -i '+ '"' + self.filePath + '" ' + '-c copy '
+            command = 'ffmpeg -i '+ '"' + self.filePath + '" '
             if self.cover.checkState():
                 command += '-map a '
             elif self.cover2.checkState() and self.covPath != '':
@@ -102,7 +102,7 @@ class Window(QMainWindow):
                             '-metadata artist="'+self.artist.text()+'" ' +
                             '-metadata album="'+self.album.text()+'" ')
 
-            command += '"' + self.outPath + '"'
+            command += '-c copy ' + '"' + self.outPath + '"'
 
             sp.run(command, shell=True, check=True)
 ##            print(sp.run(command, shell=True, check=True, capture_output=True))
